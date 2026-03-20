@@ -1,0 +1,17 @@
+# Selenium tests
+selenium==4.17.2
+webdriver-manager==4.0.1
+
+# Testing tools
+pytest==8.1.1
+pytest-django==4.7.0
+pytest-html==4.1.1
+pytest-xdist==3.5.0
+
+# Utils
+python-dotenv==1.0.1
+requests==2.31.0
+
+# Optional - for generating test data
+factory-boy==3.3.0
+Faker==22.5.1
