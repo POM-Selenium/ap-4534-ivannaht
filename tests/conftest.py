@@ -1,12 +1,13 @@
 import os
+from selenium.webdriver.support import expected_conditions as EC
 import pytest
 import requests
 from uuid import uuid4
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
+from selenium.webdriver.support.wait import WebDriverWait
 from pages.login_page import LoginPage
+from pages.home_page import HomePage
 
 
 @pytest.fixture(scope="session")
@@ -66,8 +67,30 @@ def home_url(base_url):
 
 
 @pytest.fixture
-def login_page(chrome_driver, base_url, login_path):
-    page = LoginPage(chrome_driver, base_url, login_path)
+def home_page(chrome_driver, home_url):
+    page = HomePage(chrome_driver, home_url)
     page.open()
     page.wait_for_page_loaded()
+
     return page
+
+
+@pytest.fixture
+def login_page(chrome_driver, base_url, login_path, home_page, logout):
+    home_page.click_login()
+    page = LoginPage(chrome_driver, base_url, login_path)
+    page.wait_for_page_loaded()
+
+    return page
+
+
+@pytest.fixture
+def logout(chrome_driver, home_page):
+    try:
+        home_page.click_logout()
+
+        WebDriverWait(chrome_driver, 5).until(
+            EC.presence_of_element_located(home_page.LOGIN_LINK)
+        )
+    except Exception:
+        pass
